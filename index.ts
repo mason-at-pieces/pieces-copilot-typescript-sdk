@@ -38,7 +38,7 @@ export class PiecesClient {
     this.userApi = new UserApi(this.config);
 
     this.trackedApplication = trackedApplication || {
-      id: 'DEFAULT', // This is the application id for all open source applications
+      id: 'DEFAULT',
       name: ApplicationNameEnum.OpenSource,
       version: '0.0.1',
       platform: PlatformEnum.Macos,

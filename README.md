@@ -34,10 +34,10 @@ First, you need to import the SDK and initialize it with your base URL. The base
 Here's how you can initialize the SDK:
 
 ```typescript
-import { PiecesCopilotSDK } from 'pieces-copilot-sdk';
+import { PiecesClient } from 'pieces-copilot-sdk';
 
 // Replace 'your_base_url' with your actual base URL
-const sdk = new PiecesCopilotSDK({ baseUrl: 'your_base_url' });
+const piecesClient = new PiecesClient({ baseUrl: 'your_base_url' });
 ```
 
 Then, you can use the various methods provided by the SDK to interact with your applications.
@@ -57,9 +57,7 @@ This method creates a new conversation. It takes an optional name and optional f
 Example usage:
 
 ```typescript
-import { createConversation } from 'pieces-copilot-sdk';
-
-const newConversation = await createConversation({
+const newConversation = await piecesClient.createConversation({
   name: 'Hello World Conversation',
   firstMessage: 'Hello, world!',
 });
@@ -70,11 +68,9 @@ const newConversation = await createConversation({
 This method retrieves a conversation by its ID. You can choose to include raw messages in the conversation by setting the `includeRawMessages` parameter to `true`. It returns a Promise that resolves to a Conversation object or undefined.
 
 Example usage:
-
+ 
 ```typescript
-import { getSpecificConversation } from 'pieces-copilot-sdk';
-
-const conversation = await getSpecificConversation({
+const conversation = await piecesClient.getSpecificConversation({
   conversationId: 'conversationId',
   includeRawMessages: true,
 });
@@ -87,7 +83,7 @@ This method retrieves all conversations. It returns a Promise that resolves to a
 Example usage:
 
 ```typescript
-const conversations = await getConversations();
+const conversations = await piecesClient.getConversations();
 ```
 
 ### `promptConversation({ message, conversationId, regenerateConversationName? })`
@@ -99,9 +95,7 @@ If there are previous messages in the conversation, they will be used as context
 Example usage:
 
 ```typescript
-import { promptConversation } from 'pieces-copilot-sdk';
-
-const answer = await promptConversation({
+const answer = await piecesClient.promptConversation({
   message: 'Hello, world!',
   conversationId: 'conversationId'
 });
@@ -114,9 +108,7 @@ This method generates a new name for a specific conversation based on the messag
 Example usage:
 
 ```typescript
-import { updateConversationName } from 'pieces-copilot-sdk';
-
-const updatedName = await updateConversationName('conversationId');
+const updatedName = await piecesClient.updateConversationName('conversationId');
 ```
 
 ### `getUserProfilePicture()`
@@ -126,9 +118,7 @@ This method retrieves the user's profile picture. It returns a Promise that reso
 Example usage:
 
 ```typescript
-import { getUserProfilePicture } from 'pieces-copilot-sdk';
-
-const profilePictureUrl = await getUserProfilePicture();
+const profilePictureUrl = await piecesClient.getUserProfilePicture();
 ```
 
 ## Contributing
