@@ -18,7 +18,7 @@ import {
 } from '@pieces.app/pieces-os-client';
 
 export class PiecesClient {
-  private config: Configuration;
+  private readonly config: Configuration;
   trackedApplication: Application
   conversationMessagesApi: ConversationMessagesApi;
   conversationsApi: ConversationsApi;
@@ -50,7 +50,7 @@ export class PiecesClient {
   async createConversation(props: {
     name?: string;
     firstMessage?: string;
-  }): Promise<{
+  } = {}): Promise<{
     conversation: Conversation;
     answer?: string;
   } | null> {
