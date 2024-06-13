@@ -97,18 +97,6 @@ export class PiecesClient {
     }
   }
 
-  async getConversations(): Promise<Conversation[] | undefined> {
-    try {
-      const conversations = await this.conversationsApi.conversationsSnapshot();
-
-      return conversations.iterable || [];
-    } catch (error) {
-      console.error('Error fetching conversations', error);
-
-      return undefined;
-    }
-  }
-
   async getConversation({
     conversationId,
     includeRawMessages = false,
@@ -173,12 +161,26 @@ export class PiecesClient {
     }
   }
 
+  async getConversations(): Promise<Conversation[] | undefined> {
+    try {
+      const conversations = await this.conversationsApi.conversationsSnapshot();
+
+      return conversations.iterable || [];
+    } catch (error) {
+      console.error('Error fetching conversations', error);
+
+      return undefined;
+    }
+  }
+
   async promptConversation({
     message,
     conversationId,
+    regenerateConversationName = false,
   }: {
     message: string;
     conversationId: string;
+    regenerateConversationName?: boolean;
   }): Promise<string> {
     try {
       // Add the user message to the conversation
@@ -260,7 +262,11 @@ export class PiecesClient {
           },
         });
 
-      const updateName = await this.updateConversationName(conversationId);
+      if (regenerateConversationName) {
+        await this.updateConversationName({
+          conversationId,
+        });
+      }
 
       return answer.answers.iterable[0].text;
     } catch (error) {
@@ -270,9 +276,11 @@ export class PiecesClient {
     }
   }
 
-  async updateConversationName(
-    conversationId: string
-  ): Promise<string | undefined> {
+  async updateConversationName({
+    conversationId
+  }: {
+    conversationId: string;
+  }): Promise<string | undefined> {
     try {
       const conversation =
         await this.conversationApi.conversationSpecificConversationRename({
@@ -322,15 +330,15 @@ export class PiecesClient {
     }
   }
 
-  async getUserProfilePicture(): Promise<string | null> {
+  async getUserProfilePicture(): Promise<string | undefined> {
     try {
       const userRes = await this.userApi.userSnapshot();
 
-      return userRes.user?.picture || null;
+      return userRes.user?.picture || undefined;
     } catch (error) {
       console.error('Error getting user profile picture', error);
 
-      return null;
+      return undefined;
     }
   }
 }
