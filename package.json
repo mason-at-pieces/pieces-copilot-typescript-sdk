@@ -1,6 +1,6 @@
 {
   "name": "pieces-copilot-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An easy way to utilize the Pieces OS SDK to create a chatbot",
   "main": "index.js",
   "scripts": {
