@@ -50,8 +50,6 @@ Then, you can use the various methods provided by the SDK to interact with your 
 - **Get User Profile Picture**: Retrieve the user's profile picture using the `getUserProfilePicture()` method.
 - **Manage Conversations**: The SDK provides various methods to manage conversations such as fetching a specific conversation, updating conversation name, and more.
 
-All methods are designed to handle errors gracefully and return appropriate fallback values. For instance, if there's an error while fetching saved materials, the `getSavedMaterials()` method will return an empty array.
-
 ## Methods
 
 ### `createConversation({ name?, firstMessage? })`
