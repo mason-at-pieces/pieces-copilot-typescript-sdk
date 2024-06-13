@@ -26,7 +26,7 @@ export class PiecesClient {
   qgptApi: QGPTApi;
   userApi: UserApi;
 
-  constructor(config: { baseUrl: string }, trackedApplication: Application) {
+  constructor(config: { baseUrl: string }, trackedApplication?: Application) {
     this.config = new Configuration({
       basePath: config.baseUrl,
     });
