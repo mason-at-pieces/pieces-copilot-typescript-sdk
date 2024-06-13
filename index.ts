@@ -1,8 +1,6 @@
 import {
   Application,
   ApplicationNameEnum,
-  Asset,
-  AssetsApi,
   Configuration,
   Conversation,
   ConversationApi,
@@ -22,7 +20,6 @@ import {
 export class PiecesClient {
   private config: Configuration;
   trackedApplication: Application
-  assetsApi: AssetsApi;
   conversationMessagesApi: ConversationMessagesApi;
   conversationsApi: ConversationsApi;
   conversationApi: ConversationApi;
@@ -34,7 +31,6 @@ export class PiecesClient {
       basePath: config.baseUrl,
     });
 
-    this.assetsApi = new AssetsApi(this.config);
     this.conversationMessagesApi = new ConversationMessagesApi(this.config);
     this.conversationsApi = new ConversationsApi(this.config);
     this.conversationApi = new ConversationApi(this.config);
@@ -292,41 +288,6 @@ export class PiecesClient {
       console.error('Error updating conversation name', error);
 
       return 'Error updating conversation name';
-    }
-  }
-
-  async getSavedMaterials(): Promise<Asset[] | []> {
-    try {
-      const assets = await this.assetsApi.assetsSnapshot();
-
-      return assets.iterable;
-    } catch (error) {
-      console.error('Error fetching saved materials', error);
-
-      return [];
-    }
-  }
-
-  async searchSavedMaterials({
-    query,
-  }: {
-    query: string;
-  }): Promise<Asset[] | []> {
-    try {
-      const searchedAssets = await this.assetsApi.assetsSearchAssets({
-        query,
-      });
-
-      // Filter out any assets that are undefined
-      const cleanedAssets = searchedAssets.iterable
-        .filter((searchedAsset) => !!searchedAsset.asset)
-        .map((searchedAsset) => searchedAsset.asset!);
-
-      return cleanedAssets;
-    } catch (error) {
-      console.error('Error searching saved materials', error);
-
-      return [];
     }
   }
 

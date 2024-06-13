@@ -45,10 +45,8 @@ Then, you can use the various methods provided by the SDK to interact with your 
 ## Features
 
 - **Simplified Interaction**: The Pieces Copilot SDK simplifies the interaction with the Pieces OS Client SDK by providing easy-to-use methods for various operations.
-- **Fetch Saved Materials**: Retrieve a list of saved materials using the `getSavedMaterials()` method.
-- **Search Assets**: Search for assets using the `searchSavedMaterials()` method.
-- **Get User Profile Picture**: Retrieve the user's profile picture using the `getUserProfilePicture()` method.
 - **Manage Conversations**: The SDK provides various methods to manage conversations such as fetching a specific conversation, updating conversation name, and more.
+- **Get User Profile Picture**: Retrieve the user's profile picture using the `getUserProfilePicture()` method.
 
 ## Methods
 
@@ -120,32 +118,6 @@ import { updateConversationName } from 'pieces-copilot-sdk';
 
 const updatedName = await updateConversationName('conversationId');
 ```
-
-### `getSavedMaterials()`
-
-This method retrieves all saved materials. It returns a Promise that resolves to an array of Asset objects or an empty array.
-
-Example usage:
-
-```typescript
-import { getSavedMaterials } from 'pieces-copilot-sdk';
-
-const savedMaterials = await getSavedMaterials();
-```
-
-### `searchSavedMaterials({ query })`
-
-This method searches for saved materials based on a query. It takes an object with the query as a parameter. It returns a Promise that resolves to an array of Asset objects or an empty array.
-
-Example usage:
-
-```typescript
-import { searchSavedMaterials } from 'pieces-copilot-sdk';
-
-const searchResults = await searchSavedMaterials({ query: 'query' });
-```
-
-Replace `'query'` with the actual search query.
 
 ### `getUserProfilePicture()`
 
