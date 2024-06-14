@@ -52,7 +52,11 @@ export class PiecesClient {
     firstMessage?: string;
   } = {}): Promise<{
     conversation: Conversation;
-    answer?: string;
+    answer?: {
+      text: string
+      userMessageId?: string;
+      botMessageId?: string;
+    }
   } | null> {
     const { name, firstMessage } = props;
 
@@ -79,7 +83,7 @@ export class PiecesClient {
 
         return {
           conversation: newConversation,
-          answer: answer.text,
+          answer
         };
       }
 
