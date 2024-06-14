@@ -88,9 +88,11 @@ const conversations = await piecesClient.getConversations();
 
 ### `promptConversation({ message, conversationId, regenerateConversationName? })`
 
-This method prompts a conversation with a message. It takes an object with the message, conversation ID, and an optional flag to regenerate the conversation name, which is false by default, as parameters. It returns a Promise that resolves to a string (the answer to the message) or undefined.
+This method prompts a conversation with a message. It takes an object with the message, conversation ID, and an optional flag to regenerate the conversation name, which is false by default, as parameters. It returns a Promise that resolves to an object containing the text of the answer, the ID of the user query message, and the ID of the bot response message.
 
 If there are previous messages in the conversation, they will be used as context for the new message.
+
+If there is an error, it will return a Promise that resolves to an object containing only the text of the error message.
 
 Example usage:
 

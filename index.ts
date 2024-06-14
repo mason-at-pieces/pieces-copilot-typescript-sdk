@@ -52,7 +52,11 @@ export class PiecesClient {
     firstMessage?: string;
   } = {}): Promise<{
     conversation: Conversation;
-    answer?: string;
+    answer?: {
+      text: string
+      userMessageId?: string;
+      botMessageId?: string;
+    }
   } | null> {
     const { name, firstMessage } = props;
 
@@ -79,7 +83,7 @@ export class PiecesClient {
 
         return {
           conversation: newConversation,
-          answer,
+          answer
         };
       }
 
@@ -177,8 +181,24 @@ export class PiecesClient {
     message: string;
     conversationId: string;
     regenerateConversationName?: boolean;
-  }): Promise<string> {
+  }): Promise<{
+    text: string;
+    userMessageId?: string;
+    botMessageId?: string;
+  }> {
     try {
+      // Get the conversation to add the user message to
+      const conversation = await this.getConversation({
+        conversationId,
+        includeRawMessages: true,
+      });
+
+      if (!conversation) {
+        return {
+          text: 'Conversation not found'
+        };
+      }
+
       // Add the user message to the conversation
       const userMessage =
         await this.conversationMessagesApi.messagesCreateSpecificMessage({
@@ -193,19 +213,9 @@ export class PiecesClient {
           },
         });
 
-      const conversation = await this.getConversation({
-        conversationId,
-        includeRawMessages: true,
-      });
-
-      if (!conversation) {
-        return 'Conversation not found';
-      }
-
       const relevantConversationMessages: RelevantQGPTSeed[] =
         conversation.rawMessages
           ? conversation.rawMessages.map((message) => ({
-              // id: conversationId,
               seed: {
                 type: SeedTypeEnum.Asset,
                 asset: {
@@ -236,9 +246,6 @@ export class PiecesClient {
           relevant: {
             iterable: [
               ...relevantConversationMessages,
-              // ...docsSiteRelevantSeeds,
-              // ...csvRelevantSeeds,
-              // ...githubIssuesRelevantSeeds,
             ],
           },
         },
@@ -264,11 +271,17 @@ export class PiecesClient {
         });
       }
 
-      return answer.answers.iterable[0].text;
+      return {
+        text: answer.answers.iterable[0].text,
+        userMessageId: userMessage.id,
+        botMessageId: botMessage.id,
+      };
     } catch (error) {
       console.error('Error prompting conversation', error);
 
-      return 'Error asking question';
+      return {
+        text: 'Error asking question'
+      };
     }
   }
 

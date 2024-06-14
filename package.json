@@ -1,6 +1,6 @@
 {
   "name": "pieces-copilot-sdk",
-  "version": "1.1.4",
+  "version": "1.1.6",
   "description": "A Pieces OS SDK wrapper that allows anyone to easily create a Pieces Copilot experience with minimal code.",
   "main": "dist/index.js",
   "scripts": {
