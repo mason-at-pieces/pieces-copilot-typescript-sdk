@@ -18,7 +18,7 @@ import {
 } from '@pieces.app/pieces-os-client';
 
 export class PiecesClient {
-  config: Configuration;
+  private readonly config: Configuration;
   trackedApplication: Application
   conversationMessagesApi: ConversationMessagesApi;
   conversationsApi: ConversationsApi;
