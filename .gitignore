@@ -1,4 +1,8 @@
+# IDEs
 .idea
 *.iml
+vscode
+
+# Build files
 node_modules
 dist
