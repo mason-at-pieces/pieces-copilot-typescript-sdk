@@ -1,5 +1,7 @@
 # Pieces Copilot SDK
 
+> 
+
 This repository contains the Pieces Copilot SDK, a convenient wrapper around the Pieces OS Client SDK. It simplifies the process of interacting with your applications by providing a more user-friendly interface to the underlying Pieces OS Client SDK.
 
 [View on NPM](https://www.npmjs.com/package/pieces-copilot-sdk)
@@ -22,12 +24,16 @@ For yarn:
 yarn add pieces-copilot-sdk
 ```
 
+## Requirements
+
+> **You must either have [Pieces OS](https://docs.pieces.app/installation-getting-started/what-am-i-installing) installed on your local machine or have access to a remote instance of Pieces OS to use this SDK.**
+
 ## Usage
 
 First, you need to import the SDK and initialize it with your base URL. The base URL will depend on your setup:
 
 - If you are using a local instance of Pieces OS:
-  - On MacOS/Windows, use `http://localhost:1000`
+  - On macOS/Windows, use `http://localhost:1000`
   - On Linux, use `http://localhost:5323`
 - If you are using a remote instance of Pieces OS, use the URL you have set up for that.
 
