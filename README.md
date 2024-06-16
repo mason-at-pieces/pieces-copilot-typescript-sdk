@@ -1,7 +1,5 @@
 # Pieces Copilot SDK
 
-> 
-
 This repository contains the Pieces Copilot SDK, a convenient wrapper around the Pieces OS Client SDK. It simplifies the process of interacting with your applications by providing a more user-friendly interface to the underlying Pieces OS Client SDK.
 
 [View on NPM](https://www.npmjs.com/package/pieces-copilot-sdk)
