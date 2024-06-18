@@ -14,8 +14,9 @@ import {
   QGPTConversationMessageRoleEnum,
   RelevantQGPTSeed,
   SeedTypeEnum,
-  UserApi,
+  UserApi, WellKnownApi,
 } from '@pieces.app/pieces-os-client';
+import {PiecesConnectionCheck} from "./checks/connect";
 
 export class PiecesClient {
   private readonly config: Configuration;
@@ -25,6 +26,7 @@ export class PiecesClient {
   conversationApi: ConversationApi;
   qgptApi: QGPTApi;
   userApi: UserApi;
+  wellKnownApi: WellKnownApi;
 
   constructor(config: { baseUrl: string }, trackedApplication?: Application) {
     this.config = new Configuration({
@@ -36,6 +38,7 @@ export class PiecesClient {
     this.conversationApi = new ConversationApi(this.config);
     this.qgptApi = new QGPTApi(this.config);
     this.userApi = new UserApi(this.config);
+    this.wellKnownApi = new WellKnownApi(this.config);
 
     this.trackedApplication = trackedApplication || {
       id: 'DEFAULT',
@@ -47,6 +50,39 @@ export class PiecesClient {
     }
   }
 
+  private async checkPiecesConnection(): Promise<{
+    connected: boolean;
+    notInstalled: boolean;
+  }> {
+    try {
+      const wellKnown = await this.wellKnownApi.getWellKnownHealth();
+      return {
+        connected: true,
+        notInstalled: false,
+      };
+    } catch (error) {
+      console.error('Error connecting to Pieces', error);
+      const launched = await this.launchPiecesOS();
+      return {
+        connected: launched,
+        notInstalled: !launched,
+      };
+    }
+  }
+
+  private async launchPiecesOS(): Promise<boolean> {
+    try {
+      await fetch('pieces://launch', { method: 'GET' })
+
+      return true;
+    } catch (error) {
+      console.error('Error launching Pieces OS', error);
+
+      return false;
+    }
+  }
+
+  @PiecesConnectionCheck
   async createConversation(props: {
     name?: string;
     firstMessage?: string;
@@ -97,6 +133,7 @@ export class PiecesClient {
     }
   }
 
+  @PiecesConnectionCheck
   async getConversation({
     conversationId,
     includeRawMessages = false,
@@ -161,6 +198,7 @@ export class PiecesClient {
     }
   }
 
+  @PiecesConnectionCheck
   async getConversations(): Promise<Conversation[] | undefined> {
     try {
       const conversations = await this.conversationsApi.conversationsSnapshot();
@@ -173,6 +211,35 @@ export class PiecesClient {
     }
   }
 
+  async askQuestion({
+    message,
+  } : {
+    message: string;
+  }): Promise<string | undefined> {
+    try {
+      const answer = await this.qgptApi.question({
+        qGPTQuestionInput: {
+          query: message,
+          pipeline: {
+            conversation: {
+              contextualizedCodeDialog: {},
+            },
+          },
+          relevant: {
+            iterable: [],
+          }
+        },
+      });
+
+      return answer.answers.iterable[0].text;
+    } catch (error) {
+      console.error('Error asking question', error);
+
+      return undefined;
+    }
+  }
+
+  @PiecesConnectionCheck
   async promptConversation({
     message,
     conversationId,
@@ -285,6 +352,7 @@ export class PiecesClient {
     }
   }
 
+  @PiecesConnectionCheck
   async updateConversationName({
     conversationId
   }: {
@@ -304,6 +372,7 @@ export class PiecesClient {
     }
   }
 
+  @PiecesConnectionCheck
   async getUserProfilePicture(): Promise<string | undefined> {
     try {
       const userRes = await this.userApi.userSnapshot();
