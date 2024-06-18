@@ -173,6 +173,34 @@ export class PiecesClient {
     }
   }
 
+  async askQuestion({
+    question
+  }: {
+    question: string;
+  }): Promise<string | undefined> {
+    try {
+      const answer = await this.qgptApi.question({
+        qGPTQuestionInput: {
+          query: question,
+          pipeline: {
+            conversation: {
+              generalizedCodeDialog: {},
+            },
+          },
+          relevant: {
+            iterable: [],
+          }
+        },
+      });
+
+      return answer.answers.iterable[0].text;
+    } catch (error) {
+      console.error('Error asking question', error);
+
+      return 'Error asking question';
+    }
+  }
+
   async promptConversation({
     message,
     conversationId,
