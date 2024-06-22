@@ -50,22 +50,26 @@ export class PiecesClient {
     }
   }
 
-  private async checkPiecesConnection(): Promise<{
+  async checkPiecesConnection(): Promise<{
     connected: boolean;
-    notInstalled: boolean;
+    installed: boolean;
   }> {
     try {
       const wellKnown = await this.wellKnownApi.getWellKnownHealth();
+
+      console.log('Pieces connected', wellKnown)
+
       return {
         connected: true,
-        notInstalled: false,
+        installed: true,
       };
     } catch (error) {
       console.error('Error connecting to Pieces', error);
       const launched = await this.launchPiecesOS();
+
       return {
         connected: launched,
-        notInstalled: !launched,
+        installed: false,
       };
     }
   }
