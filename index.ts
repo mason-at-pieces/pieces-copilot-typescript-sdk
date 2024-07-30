@@ -1,8 +1,6 @@
 import {
-  Application,
   ApplicationNameEnum,
   Configuration,
-  Conversation,
   ConversationApi,
   ConversationMessageApi,
   ConversationMessagesApi,
@@ -12,9 +10,14 @@ import {
   PrivacyEnum,
   QGPTApi,
   QGPTConversationMessageRoleEnum,
-  RelevantQGPTSeed,
   SeedTypeEnum,
   UserApi,
+} from '@pieces.app/pieces-os-client';
+import type {
+  Application,
+  Conversation,
+  QGPTPromptPipeline,
+  RelevantQGPTSeed,
 } from '@pieces.app/pieces-os-client';
 
 export class PiecesClient {
@@ -26,6 +29,11 @@ export class PiecesClient {
   qgptApi: QGPTApi;
   userApi: UserApi;
 
+  /**
+   * Creates an instance of PiecesClient.
+   * @param config - Configuration object containing the base URL.
+   * @param trackedApplication - Optional application to be tracked.
+   */
   constructor(config: { baseUrl: string }, trackedApplication?: Application) {
     this.config = new Configuration({
       basePath: config.baseUrl,
@@ -47,6 +55,11 @@ export class PiecesClient {
     }
   }
 
+  /**
+   * Creates a new conversation.
+   * @param props - Optional properties for the conversation.
+   * @returns The created conversation and the first message answer if provided.
+   */
   async createConversation(props: {
     name?: string;
     firstMessage?: string;
@@ -97,6 +110,11 @@ export class PiecesClient {
     }
   }
 
+  /**
+   * Retrieves a specific conversation.
+   * @param params - Parameters for retrieving the conversation.
+   * @returns The conversation with optional raw messages.
+   */
   async getConversation({
     conversationId,
     includeRawMessages = false,
@@ -161,6 +179,10 @@ export class PiecesClient {
     }
   }
 
+  /**
+   * Retrieves all conversations.
+   * @returns An array of conversations.
+   */
   async getConversations(): Promise<Conversation[] | undefined> {
     try {
       const conversations = await this.conversationsApi.conversationsSnapshot();
@@ -173,20 +195,43 @@ export class PiecesClient {
     }
   }
 
+  /**
+   * Asks a question using the QGPT API.
+   * @param params - Parameters for asking the question.
+   * @returns The answer to the question.
+   */
   async askQuestion({
-    question
+    question,
+    pipeline = 'general',
   }: {
     question: string;
+    pipeline: 'general' | 'code' | 'wpe'
   }): Promise<string | undefined> {
     try {
+      const questionPipeline: QGPTPromptPipeline = {
+        ...(pipeline === 'general' && {
+          conversation: {
+            generalizedCodeDialog: {},
+          },
+        }),
+
+        ...(pipeline === 'code' && {
+          conversation: {
+            contextualizedCodeDialog: {},
+          },
+        }),
+
+        ...(pipeline === 'wpe' && {
+          conversation: {
+            contextualizedCodeWorkstreamDialog: {},
+          },
+        }),
+      };
+
       const answer = await this.qgptApi.question({
         qGPTQuestionInput: {
           query: question,
-          pipeline: {
-            conversation: {
-              generalizedCodeDialog: {},
-            },
-          },
+          pipeline: questionPipeline,
           relevant: {
             iterable: [],
           }
@@ -201,6 +246,11 @@ export class PiecesClient {
     }
   }
 
+  /**
+   * Prompts a conversation with a message.
+   * @param params - Parameters for prompting the conversation.
+   * @returns The response from the conversation.
+   */
   async promptConversation({
     message,
     conversationId,
@@ -313,6 +363,11 @@ export class PiecesClient {
     }
   }
 
+  /**
+   * Updates the name of a conversation.
+   * @param params - Parameters for updating the conversation name.
+   * @returns The updated conversation name.
+   */
   async updateConversationName({
     conversationId
   }: {
@@ -332,6 +387,10 @@ export class PiecesClient {
     }
   }
 
+  /**
+   * Retrieves the user's profile picture.
+   * @returns The URL of the user's profile picture.
+   */
   async getUserProfilePicture(): Promise<string | undefined> {
     try {
       const userRes = await this.userApi.userSnapshot();
