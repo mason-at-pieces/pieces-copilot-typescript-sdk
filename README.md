@@ -54,6 +54,19 @@ Then, you can use the various methods provided by the SDK to interact with your 
 
 ## Methods
 
+### `askQuestion({ question })`
+
+This method allows the user to ask a question and receive a response. It takes a single argument, `question`, which is a string representing the query.
+The method returns a string containing the response to the question.
+
+Example usage:
+
+```typescript
+const response = await piecesClient.askQuestion({
+  question: "What is Pieces for Developers?"
+})
+```
+
 ### `createConversation({ name?, firstMessage? })`
 
 This method creates a new conversation. It takes an optional name and optional first message as parameters. It returns a Promise that resolves to an object containing the new conversation and the answer to the first message (if provided).
@@ -65,29 +78,6 @@ const newConversation = await piecesClient.createConversation({
   name: 'Hello World Conversation',
   firstMessage: 'Hello, world!',
 });
-```
-
-### `getConversation({ conversationId, includeRawMessages? })`
-
-This method retrieves a conversation by its ID. You can choose to include raw messages in the conversation by setting the `includeRawMessages` parameter to `true`. It returns a Promise that resolves to a Conversation object or undefined.
-
-Example usage:
- 
-```typescript
-const conversation = await piecesClient.getSpecificConversation({
-  conversationId: 'conversationId',
-  includeRawMessages: true,
-});
-```
-
-### `getConversations()`
-
-This method retrieves all conversations. It returns a Promise that resolves to an array of Conversation objects or undefined.
-
-Example usage:
-
-```typescript
-const conversations = await piecesClient.getConversations();
 ```
 
 ### `promptConversation({ message, conversationId, regenerateConversationName? })`
@@ -107,6 +97,19 @@ const answer = await piecesClient.promptConversation({
 });
 ```
 
+### `getConversation({ conversationId, includeRawMessages? })`
+
+This method retrieves a conversation by its ID. You can choose to include raw messages in the conversation by setting the `includeRawMessages` parameter to `true`. It returns a Promise that resolves to a Conversation object or undefined.
+
+Example usage:
+ 
+```typescript
+const conversation = await piecesClient.getSpecificConversation({
+  conversationId: 'conversationId',
+  includeRawMessages: true,
+});
+```
+
 ### `updateConversationName({ conversationId })`
 
 This method generates a new name for a specific conversation based on the messages that have sent. It takes an object with the conversation ID as a parameter. It returns a Promise that resolves to a string (the updated conversation name) or undefined.
@@ -115,6 +118,16 @@ Example usage:
 
 ```typescript
 const updatedName = await piecesClient.updateConversationName('conversationId');
+```
+
+### `getConversations()`
+
+This method retrieves all conversations. It returns a Promise that resolves to an array of Conversation objects or undefined.
+
+Example usage:
+
+```typescript
+const conversations = await piecesClient.getConversations();
 ```
 
 ### `getUserProfilePicture()`
