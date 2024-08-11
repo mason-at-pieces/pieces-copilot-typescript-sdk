@@ -12,6 +12,7 @@ import {
   PrivacyEnum,
   QGPTApi,
   QGPTConversationMessageRoleEnum,
+  QGPTRelevanceInput,
   RelevantQGPTSeed,
   SeedTypeEnum,
   UserApi,
@@ -310,6 +311,41 @@ export class PiecesClient {
       return {
         text: 'Error asking question'
       };
+    }
+  }
+
+  async addContextToConversation({
+    type,
+    context,
+    conversationId,
+  }: {
+    type: 'file' | 'folder'
+    context: QGPTRelevanceInput
+    conversationId: string
+  }): Promise<string | undefined> {
+    try {
+      const seed: RelevantQGPTSeed = {
+        seed: {
+          type: SeedTypeEnum.Asset,
+          asset: {
+            application: {
+              ...this.trackedApplication,
+            },
+            format: {
+              fragment: {
+                string: {
+                  raw: context,
+                },
+              },
+            },
+          },
+        },
+      };
+
+    } catch (error) {
+      console.error('Error adding context to conversation', error);
+
+      return 'Error adding context to conversation';
     }
   }
 
